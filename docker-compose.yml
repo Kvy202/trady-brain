@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  trady-brain:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./trady.db:/app/trady.db
+    environment:
+      - JWT_SECRET=trady-dev-secret-CHANGE-IN-PRODUCTION
+      - DATABASE_URL=sqlite+aiosqlite:///./trady.db
+      - FCM_ENABLED=false
+    restart: unless-stopped
