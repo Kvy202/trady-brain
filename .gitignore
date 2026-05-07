@@ -1,0 +1,8 @@
+.env
+trady.db
+__pycache__/
+*.pyc
+.idea/
+.claude/
+.pytest_cache/
+.venv/
