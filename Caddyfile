@@ -1,0 +1,8 @@
+# Replace api.your-domain.com with your actual domain/subdomain.
+# Caddy will automatically obtain and renew a TLS certificate from Let's Encrypt.
+# Ports 80 and 443 must be open in the Lightsail firewall.
+# Port 8000 must NOT be publicly open after this is working.
+
+api.your-domain.com {
+    reverse_proxy localhost:8000
+}
