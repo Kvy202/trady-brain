@@ -11,4 +11,16 @@ services:
       - JWT_SECRET=trady-dev-secret-CHANGE-IN-PRODUCTION
       - DATABASE_URL=sqlite+aiosqlite:///./trady.db
       - FCM_ENABLED=false
+      # Phase 3
+      - TRADING_BOT_MODE=mock
+      - TRADING_BOT_BASE_URL=http://localhost:9000
+      - TRADING_BOT_API_KEY=
+      - TRADING_BOT_HMAC_SECRET=trady-bot-hmac-secret-CHANGE-IN-PRODUCTION
+      - TRADING_BOT_TIMEOUT_SECONDS=5
+      - TRADING_BOT_ALLOWED_COMMANDS=pause_bot,reduce_risk,conservative_mode,bot_status,get_metrics,get_positions,get_logs
+      - TRADING_BOT_REQUIRE_APPROVAL_COMMANDS=resume_bot,emergency_stop,flatten_positions,increase_risk,change_strategy,add_symbol,disable_stop_loss,disable_drawdown_limit
+      - TRADING_BOT_WEBHOOK_SECRET=trady-webhook-secret-CHANGE-IN-PRODUCTION
+      - WEBHOOK_MAX_AGE_SECONDS=60
+      - APPROVAL_TTL_SECONDS=300
+      - TRADING_RATE_LIMIT=20/minute
     restart: unless-stopped

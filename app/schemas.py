@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -28,7 +28,7 @@ class VoiceTurnRequest(BaseModel):
 class VoiceAction(BaseModel):
     type: str
     label: str
-    data: dict[str, Any] = Field(default_factory=dict)
+    data: Dict[str, Any] = Field(default_factory=dict)
 
 
 class VoiceTurnResponse(BaseModel):
@@ -56,7 +56,7 @@ class ClearHistoryResponse(BaseModel):
     success: bool
 
 
-# ── Trading (demo only — no real trading) ────────────────────────────────────
+# ── Trading positions ─────────────────────────────────────────────────────────
 
 class TradingPosition(BaseModel):
     symbol: str
@@ -64,6 +64,8 @@ class TradingPosition(BaseModel):
     size: str
     pnl: float
 
+
+# ── Trading status (used by trading_supervisor for voice replies) ─────────────
 
 class TradingStatusResponse(BaseModel):
     online: bool
@@ -74,16 +76,112 @@ class TradingStatusResponse(BaseModel):
     positions: List[TradingPosition]
 
 
+# ── Bot health / status / metrics ─────────────────────────────────────────────
+
+class BotHealthResponse(BaseModel):
+    online: bool
+    mode: str          # mock | paper | live | unavailable
+    version: str
+    uptimeSeconds: int
+
+
+class BotStatusResponse(BaseModel):
+    online: bool
+    mode: str
+    pnlDay: float
+    riskMode: str
+    drawdown: float
+    positions: List[TradingPosition]
+    activeSymbols: List[str]
+    lastHeartbeat: str
+
+
+class BotMetricsResponse(BaseModel):
+    pnlDay: float
+    pnlWeek: float
+    pnlMonth: float
+    drawdown: float
+    sharpe: float
+    winRate: float
+    totalTrades: int
+    mode: str
+
+
+class BotPositionsResponse(BaseModel):
+    positions: List[TradingPosition]
+    mode: str
+    totalExposure: float
+
+
+class BotLogEntry(BaseModel):
+    timestamp: str
+    level: str
+    message: str
+
+
+class BotLogsResponse(BaseModel):
+    logs: List[BotLogEntry]
+    mode: str
+
+
+# ── Trading commands ──────────────────────────────────────────────────────────
+
 class TradingCommandRequest(BaseModel):
     command: str
     reason: Optional[str] = None
+    mode: Optional[str] = "paper"   # paper | live (live always triggers approval check)
 
 
 class TradingCommandResponse(BaseModel):
     success: bool
     command: str
     requiresApproval: bool
+    approvalId: Optional[str] = None
     message: str
+    mode: str = "mock"
+    riskLevel: str = "medium"
+    auditId: Optional[int] = None
+    expiresInSeconds: Optional[int] = None
+
+
+# ── Approval ──────────────────────────────────────────────────────────────────
+
+class ApprovalRequest(BaseModel):
+    approvalId: str
+    decision: str                         # "approve" | "deny"
+    userConfirmationText: Optional[str] = None
+
+
+class ApprovalResponse(BaseModel):
+    success: bool
+    approvalId: str
+    decision: str
+    command: str
+    message: str
+    auditId: Optional[int] = None
+
+
+# ── Audit ─────────────────────────────────────────────────────────────────────
+
+class AuditEntry(BaseModel):
+    id: int
+    command: str
+    outcome: str
+    mode: str
+    reason: Optional[str]
+    approvalId: Optional[str]
+    timestamp: str
+
+
+class AuditLogResponse(BaseModel):
+    items: List[AuditEntry]
+
+
+# ── Webhook ───────────────────────────────────────────────────────────────────
+
+class WebhookEventResponse(BaseModel):
+    accepted: bool
+    eventId: int
 
 
 # ── FCM ───────────────────────────────────────────────────────────────────────
@@ -98,7 +196,7 @@ class FcmTestRequest(BaseModel):
 class FcmTestResponse(BaseModel):
     success: bool
     message: str
-    payload: dict[str, Any] = Field(default_factory=dict)
+    payload: Dict[str, Any] = Field(default_factory=dict)
 
 
 # ── Health ────────────────────────────────────────────────────────────────────

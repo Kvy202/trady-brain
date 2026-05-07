@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\yoges\\\\AndroidStudioProjects\\\\trady-brain\" -Recurse -Force)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "Bash(python *)",
+      "Bash(.venv\\\\Scripts\\\\pip install *)",
+      "Bash(.venv/Scripts/pip install *)",
+      "Bash(.venv/Scripts/pytest tests/ -v --tb=short)",
+      "Bash(.venv/Scripts/pytest tests/test_trading_phase3.py::test_trading_health_mock -v --tb=long)",
+      "Bash(.venv/Scripts/pytest tests/ -v)",
+      "Bash(.venv/Scripts/pytest *)",
+      "Bash(.venv/Scripts/python -c \"from sqlalchemy.pool import StaticPool; print\\('StaticPool:', StaticPool\\)\")",
+      "Bash(.venv/Scripts/python -c ' *)",
+      "Bash(Get-ChildItem *)",
+      "PowerShell(Start-Sleep -Seconds 3; Invoke-RestMethod -Uri \"http://localhost:8765/health\" -Method GET 2>&1)",
+      "PowerShell(Out-Null *)",
+      "PowerShell(Start-Sleep 2; try { \\(Invoke-WebRequest \"http://localhost:8765/health\" -UseBasicParsing\\).Content } catch { \"not up: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(Get-Command *)",
+      "PowerShell(docker context ls 2>&1; docker info --format \"{{.ServerVersion}}\" 2>&1)",
+      "PowerShell(java *)",
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Users\\\\yoges\\\\.jdks\\\\jbr-17.0.14\"; $env:PATH = \"$env:JAVA_HOME\\\\bin;$env:PATH\"; & \"$env:JAVA_HOME\\\\bin\\\\java.exe\" -version 2>&1)"
+    ]
+  }
+}

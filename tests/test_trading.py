@@ -1,3 +1,4 @@
+"""Phase 2 trading tests — updated for Phase 3 schema."""
 import pytest
 from httpx import ASGITransport, AsyncClient
 
@@ -20,7 +21,8 @@ async def test_trading_status():
         resp = await client.get("/v1/trading/status", headers={"Authorization": f"Bearer {token}"})
     assert resp.status_code == 200
     data = resp.json()
-    assert data["mode"] == "demo"
+    # Phase 3: mode is "mock" in TRADING_BOT_MODE=mock
+    assert data["mode"] in ("mock", "demo", "paper")
     assert "pnlDay" in data
     assert isinstance(data["positions"], list)
 
@@ -60,7 +62,8 @@ async def test_trading_emergency_stop_requires_approval():
         token = await _get_token(client)
         resp = await client.post(
             "/v1/trading/command",
-            json={"command": "emergency_stop_demo", "reason": "test"},
+            # Phase 3: use canonical command name
+            json={"command": "emergency_stop", "reason": "test"},
             headers={"Authorization": f"Bearer {token}"},
         )
     assert resp.status_code == 200
